@@ -21,6 +21,22 @@
                 <div class="page-body button-page">
                     <div class="row">
                         <div class="col-sm-12">
+                            @if (session('success'))
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <b>Success!!</b> {{ session('success') }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @elseif (session('error'))
+                                <div class="alert alert-dark alert-dismissible fade show" role="alert">
+                                    Gagal Menyimpan Data Dari API !!!
+                                    @dump(session('error'))
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
                             <div class="card">
                                 <div class="card-header">
                                     <div class="card-header-left">

@@ -24,3 +24,4 @@ Route::post('/produk/store', [ProdukController::class, 'store'])->name('produk-s
 Route::get('/produk/{id}/edit', [ProdukController::class, 'edit'])->name('produk-edit');
 Route::post('/produk/{id}/update', [ProdukController::class, 'update'])->name('produk-update');
 Route::post('/produk/{id}/delete', [ProdukController::class, 'destroy'])->name('produk-destroy');
+Route::get('/json', [ProdukController::class, 'getProdukJson'])->name('produk-json');

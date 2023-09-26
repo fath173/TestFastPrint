@@ -23,8 +23,15 @@
         <ul class="pcoded-item pcoded-left-item">
             <li class="">
                 <a href="{{ route('produk') }}" class="waves-effect waves-dark">
-                    <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
+                    <span class="pcoded-micon"><i class="ti-receipt"></i><b>P</b></span>
                     <span class="pcoded-mtext">Produk</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li>
+            <li class="">
+                <a href="{{ route('produk-json') }}" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-layers"></i><b>A</b></span>
+                    <span class="pcoded-mtext">Clone Data API</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>

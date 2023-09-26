@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\kategori;
 use App\Models\produk;
 use App\Models\status;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class ProdukController extends Controller
 {
@@ -19,8 +21,8 @@ class ProdukController extends Controller
                 $idstatus = $s->id_status; // simpan id dari nama status "bisa dijual"
             }
         }
+
         $produk = produk::where('status_id', $idstatus)->orderBy('created_at', 'DESC')->get();
-        // $produk = produk::orderBy('created_at', 'DESC')->get();
 
         return view('produk.produk', compact('produk', 'kategori', 'status'));
     }
@@ -41,6 +43,7 @@ class ProdukController extends Controller
             'status_produk' => 'required',
         ]);
 
+        date_default_timezone_set('Asia/Jakarta');
         produk::create([
             'nama_produk' => $request->nama_produk,
             'harga' => $request->harga_produk,
@@ -69,6 +72,7 @@ class ProdukController extends Controller
             'status_produk' => 'required',
         ]);
 
+        date_default_timezone_set('Asia/Jakarta');
         $produk = produk::where('id_produk', $id);
         $produk->update([
             'nama_produk' => $request->nama_produk,
@@ -86,5 +90,38 @@ class ProdukController extends Controller
         $produk->delete();
 
         return redirect()->route('produk');
+    }
+
+    public function getProdukJson()
+    {
+        $url = 'https://recruitment.fastprint.co.id/tes/api_tes_programmer';
+
+        date_default_timezone_set('Asia/Jakarta');
+        $jam = date("H") + 1;
+        $data = [
+            'username' => 'tesprogrammer' . date("dmy") . 'C' . $jam,
+            'password' => md5('bisacoding-' . date("d-m-y")),
+        ];
+
+        $response = Http::asForm()->post($url, $data)->json();
+        if ($response['error'] == 0) {
+            produk::truncate();
+            foreach ($response['data'] as $r) {
+                $kategori = kategori::where('nama_kategori', $r['kategori'])->get();
+                // dd($kategori);
+                $status = status::where('nama_status', $r['status'])->get();
+
+                produk::create([
+                    'id_produk' => $r['id_produk'],
+                    'nama_produk' => $r['nama_produk'],
+                    'harga' => $r['harga'],
+                    'kategori_id' => $kategori[0]['id_kategori'],
+                    'status_id' => $status[0]['id_status'],
+                ]);
+            }
+            return redirect()->route('produk')->with('success', 'Data dari API Telah di Simpan pada Database');
+        } else {
+            return redirect()->route('produk')->with('error', $response);
+        }
     }
 }
